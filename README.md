@@ -4,7 +4,7 @@
 > [!CAUTION]
 > This is a fork of https://rdd.latte.to/
 
-## RDD ("Roblox Deployment Downloader")
+## UFRDD ("User-Friendly Roblox Deployment Downloader")
 
 [![Last Modified][badges/last-modified]][commits]
 
