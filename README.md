@@ -10,7 +10,6 @@
 
 Locally download Roblox deployments (Windows/Mac) directly from your browser!
 
-Hosted officially @ <https://rdd.latte.to>
 
 ### What is this?
 
