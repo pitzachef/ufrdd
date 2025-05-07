@@ -1,312 +1,199 @@
 <!DOCTYPE html>
-<!--
-    UFRDD - User Friendly Roblox Deployment Downloader
-    Based on RDD - https://github.com/latte-soft/rdd
-    Copyright (C) 2024-2025 Latte Softworks <latte.to> | MIT License
--->
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>UFRDD - Roblox Deployment Downloader</title>
     <link rel="icon" href="https://raw.githubusercontent.com/pitzachef/ufrdd/master/favicon.svg">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Inline Critical CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         :root {
             --bs-body-bg: #121212;
             --bs-body-color: #e0e0e0;
             --card-bg: #1e1e1e;
             --card-border: #2e2e2e;
-            --accent: #3a86ff;
-            --accent-hover: #4d94ff;
             --minimap-bg: rgba(30, 30, 30, 0.9);
         }
-        
         body {
-            background-color: var(--bs-body-bg);
+            background: var(--bs-body-bg);
+            color: var(--bs-body-color);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
             margin: 0;
             padding: 0;
+            line-height: 1.6;
         }
-        
-        /* Minimap Console */
         #console-minimap {
             position: fixed;
             bottom: 20px;
             right: 20px;
             width: 200px;
             height: 100px;
-            background-color: var(--minimap-bg);
+            background: var(--minimap-bg);
             border: 1px solid var(--card-border);
             border-radius: 6px;
             overflow: hidden;
             z-index: 1000;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
+            display: none;
         }
-        
         #console-minimap:hover {
             transform: scale(1.05);
             box-shadow: 0 0 15px rgba(58, 134, 255, 0.3);
         }
-        
         #minimap-content {
             padding: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 10px;
+            font: 10px 'Courier New', monospace;
             color: #e0e0e0;
             white-space: pre;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
-        
-        /* Main Console */
         #consoleText {
             min-height: 150px;
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             border-radius: 6px;
             padding: 15px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font: 14px 'Courier New', monospace;
             white-space: pre-wrap;
             overflow-x: auto;
         }
-        
-        /* Animation Targets */
         .anim-target {
             opacity: 0;
             transform: translateY(20px);
         }
     </style>
-    
-    <!-- Deferred Non-Critical CSS -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-night.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-night.min.css"></noscript>
-    
-    <!-- Preload Font Awesome -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-night.min.css" media="none" onload="this.media='all'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="none" onload="this.media='all'">
 </head>
 <body>
-    <!-- Minimap Console -->
     <div id="console-minimap" onclick="toggleConsole()">
         <div id="minimap-content"></div>
     </div>
-
-    <!-- Main Content -->
     <div class="container py-4">
         <nav class="navbar navbar-expand-lg navbar-dark anim-target">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="#">
-                    <img src="https://raw.githubusercontent.com/pitzachef/ufrdd/master/favicon.svg" height="24" class="me-2" alt="UFRDD Logo" loading="lazy">
+                    <img src="https://raw.githubusercontent.com/pitzachef/ufrdd/master/favicon.svg" height="24" class="me-2" alt="Logo">
                     UFRDD
                 </a>
                 <div class="d-flex">
-                    <a class="btn btn-sm btn-outline-secondary me-2" href="https://github.com/latte-soft/rdd" target="_blank">
-                        <i class="fab fa-github me-1"></i>GitHub
-                    </a>
-                    <a class="btn btn-sm btn-outline-secondary" href="https://latte.to" target="_blank">
-                        <i class="fas fa-external-link-alt me-1"></i>Latte
-                    </a>
+                    <a class="btn btn-sm btn-outline-secondary me-2" href="https://github.com/latte-soft/rdd" target="_blank"><i class="fab fa-github me-1"></i>GitHub</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="https://latte.to" target="_blank"><i class="fas fa-external-link-alt me-1"></i>Latte</a>
                 </div>
             </div>
         </nav>
-
         <div class="text-center mb-4 anim-target">
             <h1 class="fw-bold mb-2">UFRDD</h1>
             <p class="lead text-muted">User Friendly Roblox Deployment Downloader</p>
         </div>
-
         <div class="card warning-card mb-4 anim-target">
             <div class="card-body">
                 <h5 class="card-title"><i class="fas fa-exclamation-triangle text-warning me-2"></i>Important Notice</h5>
-                <p class="card-text mb-0">
-                    The only <strong>official</strong> host of UFRDD is <a href="https://rdd.latte.to" class="text-primary">rdd.latte.to</a>. 
-                    Under no circumstances is Latte Softworks responsible for any potential harm caused by using an unofficial fork/rehost.
-                </p>
+                <p class="card-text mb-0">Only use the official host at <a href="https://rdd.latte.to" class="text-primary">rdd.latte.to</a>.</p>
             </div>
         </div>
-
         <noscript>
-            <div class="alert alert-danger">
-                <i class="fas fa-times-circle me-2"></i>This site requires JavaScript to function properly.
-            </div>
+            <div class="alert alert-danger"><i class="fas fa-times-circle me-2"></i>Enable JavaScript for full functionality.</div>
         </noscript>
-
-        <!-- Download Form -->
         <div id="downloadFormDiv" class="anim-target">
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title mb-3"><i class="fas fa-cog me-2"></i>Download Settings</h5>
-                    
-                    <form id="downloadForm" target="_blank" action="">
+                    <form id="downloadForm" target="_blank">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="binaryType" class="form-label">Binary Type</label>
-                                <select class="form-select" id="binaryType" name="binaryType">
-                                    <option value="WindowsPlayer">Windows Player</option>
-                                    <option value="WindowsStudio64">Windows Studio (64-bit)</option>
-                                    <option value="MacPlayer">Mac Player</option>
-                                    <option value="MacStudio">Mac Studio</option>
+                                <select id="binaryType" name="binaryType" class="form-select">
+                                    <option>Windows Player</option>
+                                    <option>Windows Studio (64-bit)</option>
+                                    <option>Mac Player</option>
+                                    <option>Mac Studio</option>
                                 </select>
                             </div>
-                            
                             <div class="col-md-6">
                                 <label for="channel" class="form-label">Channel Name</label>
-                                <input type="text" class="form-control" id="channel" name="channel" placeholder="LIVE">
+                                <input id="channel" name="channel" class="form-control" placeholder="LIVE">
                             </div>
-                            
                             <div class="col-md-6">
-                                <label for="version" class="form-label">Version Hash <small class="text-muted">(Optional)</small></label>
-                                <input type="text" class="form-control" id="version" name="version">
+                                <label for="version" class="form-label">Version Hash</label>
+                                <input id="version" name="version" class="form-control" placeholder="Optional">
                             </div>
-                            
                             <div class="col-md-6">
-                                <label for="compressionLevel" class="form-label">Zip Compression Level</label>
-                                <input type="number" class="form-control" id="compressionLevel" name="compressionLevel" min="1" max="9" value="5">
-                                <small class="text-muted">1 (fastest) to 9 (best compression)</small>
+                                <label for="compressionLevel" class="form-label">Compression Level</label>
+                                <input id="compressionLevel" name="compressionLevel" type="number" class="form-control" min="1" max="9" value="5">
                             </div>
-                            
-                            <div class="col-12">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="compressZip" name="compressZip">
-                                    <label class="form-check-label" for="compressZip">Compress Output Zip</label>
-                                </div>
+                            <div class="col-12 form-check form-switch">
+                                <input id="compressZip" name="compressZip" type="checkbox" class="form-check-input">
+                                <label for="compressZip" class="form-check-label">Compress Output Zip</label>
                             </div>
-                            
                             <div class="col-12 mt-3">
-                                <button type="button" class="btn btn-primary me-2" id="download-btn" onclick="downloadFromForm();">
-                                    <i class="fas fa-download me-1"></i>Download
-                                </button>
-                                <button type="button" class="btn btn-outline-primary" id="copy-btn" onclick="copyLinkFromForm();">
-                                    <i class="fas fa-link me-1"></i>Copy Link
-                                </button>
+                                <button id="download-btn" class="btn btn-primary me-2" type="button" onclick="downloadFromForm()"><i class="fas fa-download me-1"></i>Download</button>
+                                <button id="copy-btn" class="btn btn-outline-primary" type="button" onclick="copyLinkFromForm()"><i class="fas fa-link me-1"></i>Copy Link</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
-        <!-- Main Console -->
         <div class="card anim-target">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><i class="fas fa-terminal me-2"></i>Output Log</span>
-                <button class="btn btn-sm btn-outline-secondary" onclick="minimizeConsole()">
-                    <i class="fas fa-window-minimize"></i>
-                </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="minimizeConsole()"><i class="fas fa-window-minimize"></i></button>
             </div>
             <div class="card-body p-0">
                 <output id="consoleText" class="d-block p-3"></output>
             </div>
         </div>
-
         <footer class="mt-4 pt-3 text-center text-muted small border-top border-dark anim-target">
-            <p class="mb-0">Based on RDD - Copyright © 2024-2025 Latte Softworks <a href="https://latte.to" target="_blank" class="text-primary">&lt;latte.to&gt;</a> | <a href="https://github.com/latte-soft/rdd/blob/master/LICENSE" target="_blank" class="text-primary">MIT License</a></p>
+            <p class="mb-0">© 2024-2025 Latte Softworks | <a href="https://github.com/latte-soft/rdd/blob/master/LICENSE" target="_blank">MIT License</a></p>
         </footer>
     </div>
-
-    <!-- Deferred Scripts -->
     <script>
-        function loadScript(src, callback) {
-            var script = document.createElement('script');
-            script.src = src;
-            script.onload = callback;
-            document.body.appendChild(script);
-        }
-        
-        // Load non-critical scripts after page load
-        window.addEventListener('load', function() {
-            loadScript('https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js', function() {
-                // Initialize animations after anime.js loads
-                initAnimations();
-            });
-            
-            loadScript('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js');
-            loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
-            loadScript('js/rdd.js');
-        });
-        
-        // Console minimap functionality
         var consoleMinimized = false;
-        
+        window.addEventListener('load', function() {
+            ['https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js',
+             'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
+             'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+             'js/rdd.js'
+            ].forEach(src => {
+                var s = document.createElement('script');
+                s.src = src;
+                document.body.appendChild(s);
+            });
+            document.getElementById('console-minimap').style.display = 'none';
+            initAnimations();
+            updateMinimap();
+        });
         function toggleConsole() {
-            var consoleElement = document.querySelector('.card .card-body');
+            var pos = window.scrollY;
+            var consoleEl = document.querySelector('.card .card-body');
             if (consoleMinimized) {
-                consoleElement.style.display = 'block';
+                consoleEl.style.display = 'block';
                 document.getElementById('console-minimap').style.display = 'none';
-                consoleMinimized = false;
             } else {
-                consoleElement.style.display = 'none';
-                consoleMinimized = true;
+                consoleEl.style.display = 'none';
+                document.getElementById('console-minimap').style.display = 'block';
             }
+            consoleMinimized = !consoleMinimized;
+            window.scrollTo(0, pos);
         }
-        
-        function minimizeConsole() {
-            var consoleElement = document.querySelector('.card .card-body');
-            consoleElement.style.display = 'none';
-            document.getElementById('console-minimap').style.display = 'block';
-            consoleMinimized = true;
-        }
-        
-        // Update minimap with console content
+        function minimizeConsole() { toggleConsole(); }
         function updateMinimap() {
-            var consoleContent = document.getElementById('consoleText').textContent;
-            var minimapContent = document.getElementById('minimap-content');
-            
-            // Get last few lines for minimap
-            var lines = consoleContent.split('\n');
-            var lastLines = lines.slice(Math.max(lines.length - 5, 0)).join('\n');
-            
-            minimapContent.textContent = lastLines || 'Console output will appear here...';
+            var lines = document.getElementById('consoleText').textContent.split('\n');
+            var last = lines.slice(-5).join('\n');
+            document.getElementById('minimap-content').textContent = last || 'Console output here';
         }
-        
-        // Initialize animations
         function initAnimations() {
-            anime({
-                targets: '.anim-target',
-                opacity: [0, 1],
-                translateY: [20, 0],
-                duration: 800,
-                delay: anime.stagger(100),
-                easing: 'easeOutExpo'
+            anime({ targets: '.anim-target', opacity: [0,1], translateY: [20,0], duration: 800, delay: anime.stagger(100), easing: 'easeOutExpo' });
+            document.querySelectorAll('.btn').forEach(b => {
+                b.addEventListener('mouseenter', () => anime({ targets: b, scale:1.05, duration:150 }));
+                b.addEventListener('mouseleave', () => anime({ targets: b, scale:1, duration:150 }));
             });
-            
-            // Button hover animations
-            document.querySelectorAll('.btn').forEach(btn => {
-                btn.addEventListener('mouseenter', function() {
-                    anime({
-                        targets: this,
-                        scale: 1.05,
-                        duration: 150
-                    });
-                });
-                
-                btn.addEventListener('mouseleave', function() {
-                    anime({
-                        targets: this,
-                        scale: 1,
-                        duration: 150
-                    });
-                });
-            });
-            
-            // Card hover animations removed except minimap
         }
-        
-        // Override console.log to update minimap
-        (function() {
-            var oldLog = console.log;
-            console.log = function() {
-                oldLog.apply(console, arguments);
-                var args = Array.prototype.slice.call(arguments);
-                var message = args.map(arg => 
-                    typeof arg === 'object' ? JSON.stringify(arg) : arg
-                ).join(' ');
-                
-                var consoleOutput = document.getElementById('consoleText');
-                consoleOutput.textContent += message + '\n';
+        (function(){
+            var old = console.log;
+            console.log = function(){
+                old.apply(console, arguments);
+                document.getElementById('consoleText').textContent += Array.from(arguments).map(a=> typeof a==='object'?JSON.stringify(a):a).join(' ') + '\n';
                 updateMinimap();
             };
         })();
