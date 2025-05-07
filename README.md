@@ -2,7 +2,7 @@
 [badges/last-modified]: https://img.shields.io/github/last-commit/latte-soft/rdd?label=Last%20Modifed
 
 > [!CAUTION]
-> The only *official* host of RDD is [**`rdd.[latte.to]`**](https://rdd.latte.to). Under no circumstances is Latte Softworks responsible for any potential harm caused by using an unofficial fork/rehost of RDD, though anyone is free to fork off of or rehost RDD as it is under the MIT license. RDD is a static website with none of its own backend infrastructure, binaries are fetched directly from Roblox's official content delivery network via [**`setup-cfly.[rbxcdn.com]`**](https://setup-cfly.rbxcdn.com).
+> This is a fork of https://rdd.latte.to/
 
 ## RDD ("Roblox Deployment Downloader")
 
