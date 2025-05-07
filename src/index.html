@@ -1,34 +1,27 @@
 <!DOCTYPE html>
 <!--
-    rdd - https://github.com/latte-soft/rdd
+    UFRDD - User Friendly Roblox Deployment Downloader
+    Based on RDD - https://github.com/latte-soft/rdd
     Copyright (C) 2024-2025 Latte Softworks <latte.to> | MIT License
 -->
 <html lang="en">
     <head>
-        <title>rdd</title>
+        <title>UFRDD</title>
         <link rel="icon" href="favicon.svg">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
 
             :root {
-                color-scheme: dark light;
-                --bg-color: #121212;
-                --card-bg: rgba(30, 30, 30, 0.7);
-                --card-border: rgba(255, 255, 255, 0.1);
-                --text-color: #e0e0e0;
-                --accent-color: #2ba2f1;
-                --hover-color: #3db0ff;
-                --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            }
-
-            @media (prefers-color-scheme: light) {
-                :root {
-                    --bg-color: #f5f5f5;
-                    --card-bg: rgba(255, 255, 255, 0.7);
-                    --card-border: rgba(0, 0, 0, 0.1);
-                    --text-color: #333333;
-                }
+                --bg-color: #0d1117;
+                --card-bg: rgba(22, 27, 34, 0.85);
+                --card-border: rgba(240, 246, 252, 0.1);
+                --text-color: #e6edf3;
+                --accent-color: #58a6ff;
+                --hover-color: #79c0ff;
+                --shadow: 0 8px 24px rgba(1, 4, 9, 0.5);
+                --warning-bg: rgba(187, 128, 9, 0.15);
+                --warning-border: #d29922;
             }
 
             body {
@@ -38,7 +31,9 @@
                 margin: 0;
                 padding: 20px;
                 min-height: 100vh;
-                background-image: radial-gradient(circle at 25% 25%, rgba(43, 162, 241, 0.1) 0%, transparent 50%);
+                background-image: 
+                    radial-gradient(circle at 25% 25%, rgba(88, 166, 255, 0.08) 0%, transparent 50%),
+                    linear-gradient(to bottom, #0d1117, #090c10);
             }
 
             .container {
@@ -48,6 +43,24 @@
 
             header {
                 margin-bottom: 30px;
+                border-bottom: 1px solid var(--card-border);
+                padding-bottom: 20px;
+            }
+
+            h1 {
+                color: var(--accent-color);
+                margin-bottom: 10px;
+                font-weight: 700;
+                font-size: 2rem;
+            }
+
+            h1::after {
+                content: "User Friendly Roblox Deployment Downloader";
+                display: block;
+                font-size: 1rem;
+                color: var(--text-color);
+                font-weight: 400;
+                margin-top: 5px;
             }
 
             form {
@@ -55,15 +68,15 @@
                 border: 1px solid var(--card-border);
                 border-radius: 12px;
                 padding: 25px;
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
                 box-shadow: var(--shadow);
                 margin-bottom: 20px;
                 transition: all 0.3s ease;
             }
 
             form:hover {
-                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+                box-shadow: 0 12px 40px rgba(1, 4, 9, 0.6);
             }
 
             label {
@@ -71,13 +84,14 @@
                 width: 180px;
                 font-weight: 500;
                 margin-bottom: 8px;
+                color: var(--accent-color);
             }
 
             input, select {
-                background: rgba(0, 0, 0, 0.1);
+                background: rgba(1, 4, 9, 0.3);
                 border: 1px solid var(--card-border);
                 border-radius: 6px;
-                padding: 8px 12px;
+                padding: 10px 12px;
                 color: var(--text-color);
                 font-family: 'JetBrains Mono', monospace;
                 margin-bottom: 15px;
@@ -87,7 +101,8 @@
             input:focus, select:focus {
                 outline: none;
                 border-color: var(--accent-color);
-                box-shadow: 0 0 0 2px rgba(43, 162, 241, 0.2);
+                box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3);
+                background: rgba(1, 4, 9, 0.5);
             }
 
             input[type="text"], input[type="number"] {
@@ -97,16 +112,17 @@
             input[type="checkbox"] {
                 width: auto;
                 margin-right: 10px;
+                accent-color: var(--accent-color);
             }
 
             button {
                 background-color: var(--accent-color);
-                color: white;
+                color: #0d1117;
                 border: none;
                 border-radius: 6px;
-                padding: 10px 20px;
+                padding: 12px 24px;
                 font-family: 'JetBrains Mono', monospace;
-                font-weight: 500;
+                font-weight: 600;
                 cursor: pointer;
                 margin-right: 10px;
                 margin-top: 10px;
@@ -129,10 +145,11 @@
                 border-radius: 12px;
                 padding: 20px;
                 display: block;
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
                 min-height: 100px;
                 box-shadow: var(--shadow);
+                line-height: 1.6;
             }
 
             a:link, a:visited {
@@ -148,8 +165,8 @@
             }
 
             .warning {
-                background: rgba(255, 166, 0, 0.15);
-                border-left: 4px solid orange;
+                background: var(--warning-bg);
+                border-left: 4px solid var(--warning-border);
                 padding: 15px;
                 border-radius: 0 6px 6px 0;
                 margin: 20px 0;
@@ -158,6 +175,14 @@
             .warning emoji {
                 font-size: 1.2em;
                 margin-right: 8px;
+            }
+
+            .copyright {
+                color: #7d8590;
+                font-size: 0.9rem;
+                margin-top: 30px;
+                border-top: 1px solid var(--card-border);
+                padding-top: 20px;
             }
 
             @media (max-width: 768px) {
@@ -187,12 +212,11 @@
     <body>
         <div class="container">
             <header>
-                <h1>RDD - "Roblox Deployment Downloader"</h1>
-                <p><a target="_blank" href="https://github.com/latte-soft/rdd">GitHub Repository</a><br>
-                Copyright (c) 2024-2025 Latte Softworks <a target="_blank" href="https://latte.to">&lt;latte.to&gt;</a> | <a target="_blank" href="https://github.com/latte-soft/rdd/blob/master/LICENSE">MIT License</a></p>
+                <h1>UFRDD</h1>
+                <p><a target="_blank" href="https://github.com/latte-soft/rdd">GitHub Repository</a></p>
                 
                 <div class="warning">
-                    <emoji>⚠️</emoji> The only <i>official</i> host of RDD is <a href="https://rdd.latte.to"><b>rdd.latte.to</b></a>. Under no circumstances is Latte Softworks responsible for any potential harm caused by using an unofficial fork/rehost of RDD, though anyone is free to fork off of or rehost RDD under its license.
+                    <emoji>⚠️</emoji> The only <i>official</i> host of UFRDD is <a href="https://rdd.latte.to"><b>rdd.latte.to</b></a>. Under no circumstances is Latte Softworks responsible for any potential harm caused by using an unofficial fork/rehost.
                 </div>
             </header>
             
@@ -232,6 +256,10 @@
             </div>
 
             <output id="consoleText"></output>
+
+            <div class="copyright">
+                Based on RDD - Copyright (c) 2024-2025 Latte Softworks <a target="_blank" href="https://latte.to">&lt;latte.to&gt;</a> | <a target="_blank" href="https://github.com/latte-soft/rdd/blob/master/LICENSE">MIT License</a>
+            </div>
         </div>
 
         <script src="js/jszip.min.js"></script>
